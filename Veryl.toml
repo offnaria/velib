@@ -1,9 +1,83 @@
 [project]
 name = "velib"
 version = "0.1.0"
+
 [build]
 sources = ["src"]
 target = {type = "directory", path = "target"}
 
+# lowRISC: clocks are positive-edge, resets are active-low and asynchronous.
+clock_type = "posedge"
+reset_type = "async_low"
+# NOTE: clock_*_prefix/suffix and reset_*_prefix/suffix are deliberately unset.
+# They *append* to the emitted SystemVerilog name, so with lowRISC names written
+# directly in the Veryl source (`clk_i`, `rst_ni`) they would produce `clkclk_i`.
+
 [format]
+# lowRISC: two spaces per level, wrap at 100 columns, UNIX line endings.
 indent_width = 2
+max_width = 100
+newline_style = "unix"
+vertical_align = true
+
+# Naming conventions, from the lowRISC Verilog Coding Style Guide:
+#   https://github.com/lowRISC/style-guides/blob/master/VerilogCodingStyle.md
+#
+#   Declarations (module, interface, package)   lower_snake_case
+#   Instance names                              lower_snake_case
+#   Signals (nets and ports)                    lower_snake_case
+#   Variables, functions                        lower_snake_case
+#   Tunable parameters                          UpperCamelCase
+#   Constants                                   ALL_CAPS or UpperCamelCase
+#   Enumeration types                           lower_snake_case_e
+#   Other typedef types                         lower_snake_case_t
+#   Enumerated value names                      UpperCamelCase   (not lintable in Veryl yet)
+[lint.naming]
+case_clock_domain    = "snake"
+case_enum            = "snake"
+case_function        = "snake"
+case_function_inout  = "snake"
+case_function_input  = "snake"
+case_function_output = "snake"
+case_instance        = "snake"
+case_interface       = "snake"
+case_modport         = "snake"
+case_module          = "snake"
+case_package         = "snake"
+case_port_inout      = "snake"
+case_port_input      = "snake"
+case_port_modport    = "snake"
+case_port_output     = "snake"
+case_reg             = "snake"
+case_struct          = "snake"
+case_union           = "snake"
+case_var             = "snake"
+case_wire            = "snake"
+
+# `param` and `const` share one rule in Veryl; UpperCamelCase is the only case
+# that satisfies lowRISC for both tunable parameters and constants.
+case_parameter = "upper_camel"
+
+# Type suffixes.
+suffix_enum   = "_e"
+suffix_struct = "_t"
+suffix_union  = "_t"
+
+# Namespace suffixes (lowRISC file/package convention, e.g. `foo_pkg`, `foo_if`).
+suffix_package   = "_pkg"
+suffix_interface = "_if"
+
+# Direction suffixes: `_i` input, `_o` output, `_io` bidirectional.
+#
+# These are regexes rather than plain `suffix_port_*` because lowRISC concatenates
+# guidance suffixes without a separator, with `_n` (active low) or `_p`/`_n`
+# (differential) coming first and the direction letter last: `rst_ni`, `clk_pi`.
+# Veryl matches re_required/re_forbidden against the *whole* identifier.
+re_required_port_input  = "[a-z][a-z0-9_]*_[np]?i"
+re_required_port_output = "[a-z][a-z0-9_]*_[np]?o"
+re_required_port_inout  = "[a-z][a-z0-9_]*_[np]?io"
+
+# ... and they are never separated by an extra `_`: `_ni`, not `_n_i`.
+re_forbidden_port_input  = "[a-z0-9_]*_[np]_i"
+re_forbidden_port_output = "[a-z0-9_]*_[np]_o"
+re_forbidden_port_inout  = "[a-z0-9_]*_[np]_io"
