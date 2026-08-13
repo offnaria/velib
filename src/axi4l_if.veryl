@@ -33,7 +33,7 @@ pub interface axi4l_if #(
   var rdata : logic  <DataBw>;
   var rresp : xresp_e        ;
 
-  modport master {
+  modport write_master {
     awvalid: output,
     awready: input ,
     awaddr : output,
@@ -45,6 +45,13 @@ pub interface axi4l_if #(
     bvalid : input ,
     bready : output,
     bresp  : input ,
+  }
+
+  modport write_slave {
+    ..converse(write_master)
+  }
+
+  modport read_master {
     arvalid: output,
     arready: input ,
     araddr : output,
@@ -55,7 +62,19 @@ pub interface axi4l_if #(
     rresp  : input ,
   }
 
+  modport read_slave {
+    ..converse(read_master)
+  }
+
+  modport master {
+    ..same(write_master, read_master)
+  }
+
   modport slave {
     ..converse(master)
+  }
+
+  modport monitor {
+    ..input
   }
 }
