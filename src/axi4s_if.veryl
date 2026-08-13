@@ -1,0 +1,46 @@
+pub interface axi4s_if #(
+  param KeepBw: u32 = 4,
+  param IdBw  : u32 = 1,
+  param DestBw: u32 = 1,
+  param UserBw: u32 = 4,
+) {
+  var tvalid: logic            ;
+  var tready: logic            ;
+  var tdata : logic<KeepBw * 8>;
+  var tstrb : logic<KeepBw>    ;
+  var tkeep : logic<KeepBw>    ;
+  var tlast : logic            ;
+  var tid   : logic<IdBw>      ;
+  var tdest : logic<DestBw>    ;
+  var tuser : logic<UserBw>    ;
+
+  modport min_master {
+    tvalid: output,
+    tready: input ,
+    tdata : output,
+  }
+
+  modport min_slave {
+    ..converse(min_master)
+  }
+
+  modport master {
+    tvalid: output,
+    tready: input ,
+    tdata : output,
+    tstrb : output,
+    tkeep : output,
+    tlast : output,
+    tid   : output,
+    tdest : output,
+    tuser : output,
+  }
+
+  modport slave {
+    ..converse(master)
+  }
+
+  modport monitor {
+    ..input
+  }
+}
