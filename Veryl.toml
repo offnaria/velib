@@ -84,3 +84,6 @@ re_required_port_inout  = "[a-z][a-z0-9_]*_[np]?io"
 re_forbidden_port_input  = "[a-z0-9_]*_[np]_i"
 re_forbidden_port_output = "[a-z0-9_]*_[np]_o"
 re_forbidden_port_inout  = "[a-z0-9_]*_[np]_io"
+
+[test]
+waveform_format = "fst"

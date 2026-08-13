@@ -4,5 +4,9 @@
 /dependencies
 *.f
 
+# Test output
+*.vcd
+*.fst
+
 # Verilator
 obj_dir/
