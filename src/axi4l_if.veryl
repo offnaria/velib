@@ -1,0 +1,61 @@
+pub interface axi4l_if #(
+  param AddrBw: u32 = 32,
+  param DataBw: u32 = 32,
+) {
+  import axi4l_pkg::*;
+
+  // Write address channel
+  var awvalid: logic        ;
+  var awready: logic        ;
+  var awaddr : logic<AddrBw>;
+  var awprot : logic<3>     ;
+
+  // Write data channel
+  var wvalid: logic            ;
+  var wready: logic            ;
+  var wdata : logic<DataBw>    ;
+  var wstrb : logic<DataBw / 8>;
+
+  // Write response channel
+  var bvalid: logic  ;
+  var bready: logic  ;
+  var bresp : xresp_e;
+
+  // Read address channel
+  var arvalid: logic        ;
+  var arready: logic        ;
+  var araddr : logic<AddrBw>;
+  var arprot : logic<3>     ;
+
+  // Read data channel
+  var rvalid: logic          ;
+  var rready: logic          ;
+  var rdata : logic  <DataBw>;
+  var rresp : xresp_e        ;
+
+  modport master {
+    awvalid: output,
+    awready: input ,
+    awaddr : output,
+    awprot : output,
+    wvalid : output,
+    wready : input ,
+    wdata  : output,
+    wstrb  : output,
+    bvalid : input ,
+    bready : output,
+    bresp  : input ,
+    arvalid: output,
+    arready: input ,
+    araddr : output,
+    arprot : output,
+    rvalid : input ,
+    rready : output,
+    rdata  : input ,
+    rresp  : input ,
+  }
+
+  modport slave {
+    ..converse(master)
+  }
+}

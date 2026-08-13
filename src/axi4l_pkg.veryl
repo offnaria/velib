@@ -1,0 +1,11 @@
+pub package axi4l_pkg {
+  /// Response encoding shared by the write response (BRESP) and read data
+  /// (RRESP) channels. Values are fixed by the AXI protocol and must not be
+  /// left to declaration order.
+  enum xresp_e: logic<2> {
+    OKAY = 2'b00,
+    EXOKAY = 2'b01, // Exclusive access; unused by AXI4-Lite
+    SLVERR = 2'b10,
+    DECERR = 2'b11,
+  }
+}
