@@ -2,6 +2,9 @@
 name = "velib"
 version = "0.1.0"
 
+[publish]
+publish_commit = true
+
 [build]
 sources = ["src"]
 target = {type = "directory", path = "target"}
